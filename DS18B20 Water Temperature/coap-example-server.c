@@ -1,40 +1,4 @@
-/*
- * Copyright (c) 2013, Institute for Pervasive Computing, ETH Zurich
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the Institute nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- * This file is part of the Contiki operating system.
- */
 
-/**
- * \file
- *      Erbium (Er) CoAP Engine example.
- * \author
- *      Matthias Kovatsch <kovatsch@inf.ethz.ch> & xiao
- */
 #include "contiki.h"
 #include "dev/gpio-hal.h"
 #include "net/routing/routing.h"
@@ -82,6 +46,7 @@ extern gpio_hal_port_t out_port1;
 
 static int temperature;
 /*---------------------------------------------------------------------------*/
+
 PROCESS(udp_client_process, "UDP client");
 PROCESS(er_example_server, "CoAP Server");
 PROCESS(ds18b20_process, "DS18B20 Process");
@@ -106,7 +71,7 @@ int DS18B20_Start(void) {
         Response = -1;
     }
 
-    RTIMER_BUSYWAIT(US_TO_RTIMERTICKS(400UL));; // 480 us delay totally.
+    RTIMER_BUSYWAIT(US_TO_RTIMERTICKS(400UL));; // 480 us delay totally
     
 
     return Response;
@@ -136,11 +101,11 @@ void DS18B20_Write(uint8_t data) {
 
 uint8_t DS18B20_Read(void) {
     uint8_t value = 0;
-    gpio_hal_arch_pin_set_input(out_port1, out_pin1);   // set as input
+    gpio_hal_arch_pin_set_input(out_port1, out_pin1);         // set as input
 
     for (int i = 0; i < 8; i++) {
-        gpio_hal_arch_pin_set_output(out_port1, out_pin1);  // set as output
-        gpio_hal_arch_write_pin(out_port1, out_pin1, 0);         // pull the data pin LOW
+        gpio_hal_arch_pin_set_output(out_port1, out_pin1);     // set as output
+        gpio_hal_arch_write_pin(out_port1, out_pin1, 0);       // pull the data pin LOW
         RTIMER_BUSYWAIT(US_TO_RTIMERTICKS(2UL));  // wait for 2 us
         gpio_hal_arch_pin_set_input(out_port1, out_pin1);   // set as input
         if (gpio_hal_arch_read_pin(out_port1, out_pin1)) {  // if the pin is HIGH
@@ -175,8 +140,6 @@ udp_rx_callback(struct simple_udp_connection *c,
   LOG_INFO_("\n");
   rx_count++;
 }
-
-/*---------------------------------------------------------------------------*/
 
 static void 
 res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
@@ -228,7 +191,6 @@ PROCESS_THREAD(er_example_server, ev, data)
 {
   PROCESS_BEGIN();
 
-
   PROCESS_PAUSE();
 
 
@@ -264,7 +226,6 @@ PROCESS_THREAD(ds18b20_process, ev, data)
   PROCESS_BEGIN();
 
   etimer_set(&et, SEND_INTERVAL);  
-  
 
   while(1) {
     // PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_TIMER);
@@ -294,7 +255,7 @@ PROCESS_THREAD(ds18b20_process, ev, data)
         temp_raw = (Temp_byte2 << 8) | Temp_byte1;
         // printf("temp_raw: %" PRIu16 "\n", temp_raw);
         temperature = temp_raw / 16;
-        printf("Water Humidity=%d.%02d°C\n", temperature, temp_raw % 16);
+        printf("Water Temperature=%d.%02d°C\n", temperature, temp_raw % 16);
 
     } else {
       printf("DS18B20 not detected!\n");
