@@ -36,7 +36,6 @@ extern gpio_hal_port_t out_port2;
 #else
 #define out_port1   GPIO_HAL_NULL_PORT
 #define out_port2   GPIO_HAL_NULL_PORT
-// #define out_port3   GPIO_HAL_NULL_PORT
 #endif
 
 static struct simple_udp_connection udp_conn;
