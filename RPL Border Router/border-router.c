@@ -1,35 +1,3 @@
-/*
- * Copyright (c) 2017, RISE SICS
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the Institute nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- * This file is part of the Contiki operating system.
- * XIAOOOOO
- */
-//  MAKE_MAC = MAKE_MAC_TSCH
 
 #include "contiki.h"
 #include "net/routing/routing.h"
@@ -44,7 +12,6 @@
 #define LOG_LEVEL LOG_LEVEL_INFO
 
 #define WITH_SERVER_REPLY  1
-// SERVER PORT
 #define UDP_SERVER_PORT 5678
 
 // ENVIRONMENT SENSORS
@@ -119,17 +86,11 @@ udp_rx_callback_2(struct simple_udp_connection *c,
          uint16_t datalen)
 {
   static int response_value_nutrientpump;
-  // response_value = 1;
-  // simple_udp_sendto(&udp_conn_1, &response_value, sizeof(response_value), sender_addr);
-  // if (light < 50) {
   if (float_switch == 1) {
-      // LOG_INFO("Low Water Level, sending command to add water and nutrients\n");
       response_value_nutrientpump = 1;
       simple_udp_sendto(&udp_conn_2, &response_value_nutrientpump, sizeof(response_value_nutrientpump), sender_addr);
   }
-  // else if (light > 50) {
   else if (float_switch == 0) {
-      // LOG_INFO("Ideal Water Level\n");
       response_value_nutrientpump = 0;
       simple_udp_sendto(&udp_conn_2, &response_value_nutrientpump, sizeof(response_value_nutrientpump), sender_addr);
   }
@@ -145,13 +106,7 @@ udp_rx_callback_3(struct simple_udp_connection *c,
          uint16_t datalen)
 {
 
-  // LOG_INFO("UDP packet received from ");
-  // LOG_INFO_6ADDR(sender_addr);
-  // LOG_INFO_(" on port %d from port %d with length %d\n", receiver_port, sender_port, datalen);
-
-    // Use sscanf to parse the string and extract the values
     sscanf((char *) data, "Temperature: %d", &water_temp);
-    // Now you have the individual values stored in the variables temperature, humidity, and light
     printf("Water Temperature: %d deg Celsius\n", water_temp);
 
 }
@@ -165,13 +120,8 @@ udp_rx_callback_4(struct simple_udp_connection *c,
          uint16_t datalen)
 {
 
-  // LOG_INFO("UDP packet received from ");
-  // LOG_INFO_6ADDR(sender_addr);
-  // LOG_INFO_(" on port %d from port %d with length %d\n", receiver_port, sender_port, datalen);
 
-    // Use sscanf to parse the string and extract the values
     sscanf((char *) data, "%d", &ec_sensor);
-    // Now you have the individual values stored in the variables temperature, humidity, and light
     printf("eC level: %d uS/cm \n", ec_sensor);
 }
 static void
@@ -184,15 +134,6 @@ udp_rx_callback_5(struct simple_udp_connection *c,
          uint16_t datalen)
 {
 
-
-  // LOG_INFO("UDP packet received from ");
-  // LOG_INFO_6ADDR(sender_addr);
-  // LOG_INFO_(" on port %d from port %d with length %d\n", receiver_port, sender_port, datalen);
-
-    // // Use sscanf to parse the string and extract the values
-    // sscanf((char *) data, "%d", &ph_char);
-    // // Now you have the individual values stored in the variables temperature, humidity, and light
-    // printf("ph level: %d \n", ph_char);
   if (datalen < sizeof(ph_char)) {
     memcpy(ph_char, data, datalen);
     ph_char[datalen] = '\0'; // Null-terminate the string
@@ -213,13 +154,7 @@ udp_rx_callback_6(struct simple_udp_connection *c,
          uint16_t datalen)
 {
 
-  // LOG_INFO("UDP packet received from ");
-  // LOG_INFO_6ADDR(sender_addr);
-  // LOG_INFO_(" on port %d from port %d with length %d\n", receiver_port, sender_port, datalen);
-
-    // Use sscanf to parse the string and extract the values
     sscanf((char *) data, "%d", &float_switch);
-    // Now you have the individual values stored in the variables temperature, humidity, and light
     printf("water level: %d\n", float_switch);
 }
 
